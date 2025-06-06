@@ -1,0 +1,13 @@
+# To install, run this command inside project directory:
+# python -m pip install --user .
+
+[build-system]
+requires = ["setuptools>=80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "task-tracker"
+version = "0.0.1"
+
+[project.scripts]
+tracker = "tracker:main"
