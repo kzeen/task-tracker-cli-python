@@ -1,5 +1,5 @@
 # To install, run this command inside project directory:
-# python -m pip install --user .
+# python -m pip install -e .
 
 [build-system]
 requires = ["setuptools>=80.9.0"]
