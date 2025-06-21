@@ -26,8 +26,8 @@ def parse_args() -> None:
     match sys.argv[1:]:
         case ['add', task_description]:
             add_task(task_description)
-        case ['update', task_id, task_description]:
-            print("Updated task", task_description, "ID:", task_id)
+        case ['update', task_id, new_description]:
+            update_task(int(task_id), new_description)
         case ['delete', task_id]:
             print("Deleted task with ID", task_id)
         case ['mark-in-progress', task_id]:
@@ -56,6 +56,15 @@ def load_tasks() -> list[dict]:
     except (FileNotFoundError, json.JSONDecodeError, OSError):
         return []
 
+def save_tasks(task_list: list[dict]) -> None:
+    """
+    Args:
+        task_list: List of objects representing tasks
+    Takes list of tasks to save to JSON file
+    """
+    with open('tasks.json', 'w') as fh:
+        json.dump(task_list, fh, indent=1)
+
 def add_task(task_description: str) ->  None:
     """
     Args:
@@ -78,10 +87,48 @@ def add_task(task_description: str) ->  None:
     }
     current_tasks.append(new_task)
 
-    with open('tasks.json', 'w') as fh:
-        json.dump(current_tasks, fh, indent=1)
+    save_tasks(current_tasks)
 
     print(f"Added task '{task_description}' with ID {next_id}")
+
+def update_task(task_id: int, new_description: str) -> None:
+    """
+    Args:
+        task_id: ID of the task to update
+        new_description: New description to update old one
+    Searches for specified task
+    If found, updates description and 'updated_at'
+    If not, nothing happens
+    """
+    current_tasks = load_tasks()
+
+    if current_tasks:
+        task_index = get_task_index(task_id)
+        if task_index >= 0:
+            current_tasks[task_index]["desc"] = new_description
+            current_tasks[task_index]["updated_at"] = get_current_time()
+
+            save_tasks(current_tasks)
+
+            print(f"Updated task ID {task_id} to '{new_description}'")
+            return
+    # No tasks at all, or ID not found
+    print("This task does not exist")
+
+
+def get_task_index(task_id: int) -> int:
+    """
+    Args:
+        task_id: ID of task to search for
+    Searches tasks for matching ID and returns its index if found,
+    -1 if not found
+    """
+    current_tasks = load_tasks()
+    if current_tasks:
+        for task_index, task in enumerate(current_tasks):
+            if task["id"] == task_id:
+                return task_index
+    return -1
 
 def main() -> None:
     validate_args()
