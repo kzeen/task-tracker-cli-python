@@ -37,10 +37,10 @@ def parse_args() -> None:
         case ['mark-todo', task_id]:
             update_task_status(int(task_id), "todo")
         case ['list']:
-            print("Listing all tasks")
+            list_tasks()
         case ['list', task_filter]:
             if task_filter in ('done', 'todo', 'in-progress'):
-                print("Listing tasks marked as", task_filter)
+                list_tasks(task_filter)
             else:
                 print("Run --help")
         case _:
@@ -165,6 +165,27 @@ def update_task_status(task_id: int, new_status: str) -> None:
             return
     # No tasks at all, or ID not found
     print(f"Task with ID {task_id} was not found")
+
+def list_tasks(task_filter: str = "") -> None:
+    """
+    Args:
+        task_filter: Optional status filter to show tasks from
+    Lists all tasks in order if no filter is provided
+    Otherwise, lists tasks under a certain status
+    """
+    current_tasks = load_tasks()
+
+    if current_tasks:
+        filtered_tasks = [task for task in current_tasks if not task_filter or task["status"] == task_filter]
+
+        if filtered_tasks:
+            for task in filtered_tasks:
+                print(f"ID: {task['id']} - {task['status']}")
+                print(f" {task['desc']}\n")
+        else:
+            print("No tasks with this status exist")
+    else:
+        print("No tasks to display")
 
 def get_task_index(task_id: int) -> int:
     """
