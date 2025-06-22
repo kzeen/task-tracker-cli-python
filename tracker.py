@@ -31,9 +31,9 @@ def parse_args() -> None:
         case ['delete', task_id]:
             delete_task(int(task_id))
         case ['mark-in-progress', task_id]:
-            print("Marked task with ID", task_id, "as in progress")
+            update_task_status(int(task_id), "in-progress")
         case ['mark-done', task_id]:
-            print("Marked task with ID", task_id, "as done")
+            update_task_status(int(task_id), "done")
         case ['list']:
             print("Listing all tasks")
         case ['list', task_filter]:
@@ -137,6 +137,32 @@ def delete_task(task_id: int) -> None:
     # No tasks at all, or ID not found
     print(f"Task with ID {task_id} was not found")
 
+def update_task_status(task_id: int, new_status: str) -> None:
+    """
+    Args:
+        task_id: ID of task to update status of
+        new_status: Status to update task to
+    Searches for specified task
+    If found, updates status and 'updated_at' (if status different from current)
+    If not, nothing happens
+    """
+    current_tasks = load_tasks()
+
+    if current_tasks:
+        task_index = get_task_index(task_id)
+        if task_index >=0:
+            if current_tasks[task_index]["status"] != new_status:
+                current_tasks[task_index]["status"] = new_status
+                current_tasks[task_index]["updated_at"] = get_current_time()
+
+                save_tasks(current_tasks)
+
+                print(f"Marked task with ID {task_id} as {new_status}")
+            else:
+                print("Status remained unchanged")
+            return
+    # No tasks at all, or ID not found
+    print(f"Task with ID {task_id} was not found")
 
 def get_task_index(task_id: int) -> int:
     """
