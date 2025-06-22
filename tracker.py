@@ -3,7 +3,7 @@ import json
 import datetime
 
 
-ACCEPTED_COMMANDS = ('add', 'update', 'delete', 'mark-in-progress', 'mark-done', 'list')
+ACCEPTED_COMMANDS = ('add', 'update', 'delete', 'mark-in-progress', 'mark-done', 'mark-todo', 'list')
 
 
 def get_current_time() -> str:
@@ -34,6 +34,8 @@ def parse_args() -> None:
             update_task_status(int(task_id), "in-progress")
         case ['mark-done', task_id]:
             update_task_status(int(task_id), "done")
+        case ['mark-todo', task_id]:
+            update_task_status(int(task_id), "todo")
         case ['list']:
             print("Listing all tasks")
         case ['list', task_filter]:
