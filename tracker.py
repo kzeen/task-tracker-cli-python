@@ -29,7 +29,7 @@ def parse_args() -> None:
         case ['update', task_id, new_description]:
             update_task(int(task_id), new_description)
         case ['delete', task_id]:
-            print("Deleted task with ID", task_id)
+            delete_task(int(task_id))
         case ['mark-in-progress', task_id]:
             print("Marked task with ID", task_id, "as in progress")
         case ['mark-done', task_id]:
@@ -113,7 +113,29 @@ def update_task(task_id: int, new_description: str) -> None:
             print(f"Updated task ID {task_id} to '{new_description}'")
             return
     # No tasks at all, or ID not found
-    print("This task does not exist")
+    print(f"Task with ID {task_id} was not found")
+
+def delete_task(task_id: int) -> None:
+    """
+    Args:
+        task_id: ID of the task to delete
+    Searches for the task to delete by ID.
+    If found, deletes it from list and updates file
+    If not, nothing happens
+    """
+    current_tasks = load_tasks()
+
+    if current_tasks:
+        task_index = get_task_index(task_id)
+        if task_index >= 0:
+            current_tasks.pop(task_index)
+
+            save_tasks(current_tasks)
+
+            print(f"Deleted task with ID {task_id}")
+            return
+    # No tasks at all, or ID not found
+    print(f"Task with ID {task_id} was not found")
 
 
 def get_task_index(task_id: int) -> int:
