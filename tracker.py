@@ -3,7 +3,7 @@ import json
 import datetime
 
 
-ACCEPTED_COMMANDS = ('add', 'update', 'delete', 'mark-in-progress', 'mark-done', 'mark-todo', 'list')
+ACCEPTED_COMMANDS = ('add', 'update', 'delete', 'mark-in-progress', 'mark-done', 'mark-todo', 'list', '-h', '--help', '-v', '--version')
 
 
 def get_current_time() -> str:
@@ -42,6 +42,10 @@ def parse_args() -> None:
                 list_tasks(task_filter)
             else:
                 help_command()
+        case ['-h' | '--help']:
+            help_command()
+        case ['-v' | '--version']:
+            version_command()
         case _:
             help_command()
 
@@ -218,6 +222,12 @@ def help_command() -> None:
     print("Options:")
     print("  -h, --help\tPrint out this help message")
     print("  -v, --version\tPrint out version number")
+
+def version_command() -> None:
+    """
+    Print out the version of this CLI application
+    """
+    print("\nTask Tracker version 1.0.0\n")
 
 def main() -> None:
     validate_args()
