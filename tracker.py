@@ -13,8 +13,7 @@ def get_current_time() -> str:
 def validate_args() -> None:
     """Run initial validation of command line arguments, pointing to --help command on errors"""
     if len(sys.argv) <= 1 or sys.argv[1] not in ACCEPTED_COMMANDS:
-        # Show help/usage command
-        print("Run --help")
+        help_command()
     else:
         parse_args()
 
@@ -42,9 +41,9 @@ def parse_args() -> None:
             if task_filter in ('done', 'todo', 'in-progress'):
                 list_tasks(task_filter)
             else:
-                print("Run --help")
+                help_command()
         case _:
-            print("Run --help")
+            help_command()
 
 def load_tasks() -> list[dict]:
     """
@@ -200,6 +199,25 @@ def get_task_index(task_id: int) -> int:
             if task["id"] == task_id:
                 return task_index
     return -1
+
+def help_command() -> None:
+    """
+    Print out the help command on how to use this CLI application
+    """
+    print("\nTask Tracker\n")
+    print("Usage:")
+    print("  tracker add <description>")
+    print("  tracker update <id> <new_description>")
+    print("  tracker delete <id>")
+    print("  tracker mark-in-progress <id>")
+    print("  tracker mark-done <id>")
+    print("  tracker mark-todo <id>")
+    print("  tracker list [in-progress | done | todo]")
+    print("\n Make sure <description> and <new_description> are between quotations\n")
+
+    print("Options:")
+    print("  -h, --help\tPrint out this help message")
+    print("  -v, --version\tPrint out version number")
 
 def main() -> None:
     validate_args()
