@@ -12,8 +12,10 @@ def get_current_time() -> str:
 
 def validate_args() -> None:
     """Run initial validation of command line arguments, pointing to --help command on errors"""
-    if len(sys.argv) <= 1 or sys.argv[1] not in ACCEPTED_COMMANDS:
+    if len(sys.argv) <= 1:
         help_command()
+    elif sys.argv[1] not in ACCEPTED_COMMANDS:
+        invalid_command(sys.argv[1])
     else:
         parse_args()
 
@@ -211,23 +213,31 @@ def help_command() -> None:
     print("\nTask Tracker\n")
     print("Usage:")
     print("  tracker add <description>")
-    print("  tracker update <id> <new_description>")
+    print("  tracker update <id> <description>")
     print("  tracker delete <id>")
     print("  tracker mark-in-progress <id>")
     print("  tracker mark-done <id>")
     print("  tracker mark-todo <id>")
     print("  tracker list [in-progress | done | todo]")
-    print("\n Make sure <description> and <new_description> are between quotations\n")
+    print("\n Make sure <description> is between quotations\n")
 
     print("Options:")
     print("  -h, --help\tPrint out this help message")
-    print("  -v, --version\tPrint out version number")
+    print("  -v, --version\tPrint out application's version number")
 
 def version_command() -> None:
     """
     Print out the version of this CLI application
     """
     print("\nTask Tracker version 1.0.0\n")
+
+def invalid_command(passed_arg: str) -> None:
+    """
+    Args:
+        passed_arg: The invalid command passed by user
+    Point out invalid commands and point to help command instead
+    """
+    print(f"\ntracker: '{passed_arg}' is not a tracker command. See 'tracker --help'\n")
 
 def main() -> None:
     validate_args()
