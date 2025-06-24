@@ -2,7 +2,7 @@
 
 ## What it is
 Simple CLI project used to track and manage tasks. Tracks what you need to do,
-what you have done, and what you are currently working on.
+what you have done, and what you are currently working on. Find on [roadmap.sh](https://roadmap.sh/projects/task-tracker).
 
 ## Features
 - Add, update, delete tasks
